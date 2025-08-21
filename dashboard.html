@@ -1,0 +1,94 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Precision Muscle League Scoreboard</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    select { margin-bottom: 20px; padding: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+  </style>
+
+  <meta http-equiv="refresh" content="60">
+</head>
+	
+<body style="background-image: url('db.png')" >
+<header style="display: flex; justify-content: space-between; align-items: center; background-color: white; padding: 10px 20px; margin-bottom: 30px;">
+	
+    <img src="pml.png" alt="Precision Muscle League" style="height: 60px;">
+   <!-- <img src="leaderboard.png" alt="Leaderboard" style="height: 60px;">-->
+    <img src="logo.png" alt="logo" style="height: 60px;">
+</header>
+
+
+
+<button onclick="window.location.href='index.html'" style="margin-bottom: 20px; padding: 8px 16px; background-color: white; border: 2px solid red; color: black; border-radius: 5px; cursor: pointer;">
+  ⬅ Back to Form
+</button>
+
+	
+<table id="emgTable" style="background-color: white">
+  <thead>
+    <tr>
+      <th>Sr. No</th>
+      <th>Name</th>
+      <th>Contact Number</th>
+      <th>Profession</th>
+      <th>Reading</th>
+      
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const API_URL = "https://api.sheetbest.com/sheets/e24f779a-44c8-42df-ae2d-53fd7db588d1";
+
+    async function fetchData() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      return data.sort((a, b) => {
+        const emgA = parseFloat(a.EMG) || 0;
+        const emgB = parseFloat(b.EMG) || 0;
+        return emgB - emgA;
+      });
+    }
+
+    function renderTable(data) {
+      const tbody = document.querySelector("#emgTable tbody");
+      if (!tbody) return console.error("❌ tbody not found");
+      tbody.innerHTML = "";
+      data.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${row.Name}</td>
+          <td>${row.ContacNo}</td>
+          <td>${row.Profession}</td>
+          <td>${row.Reading}</td>
+          
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+   
+
+   
+
+    async function init() {
+      const data = await fetchData();
+      renderTable(data);
+      populateFilter(data);
+    }
+
+    init();
+  });
+</script>
+
+</body>
+</html>
