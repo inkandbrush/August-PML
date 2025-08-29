@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,17 +17,13 @@
 <header style="display: flex; justify-content: space-between; align-items: center; background-color: white; padding: 10px 20px; margin-bottom: 30px;">
 	
     <img src="PML.png" alt="Precision Muscle League" style="height: 60px;">
-   <!-- <img src="leaderboard.png" alt="Leaderboard" style="height: 60px;">-->
     <img src="logo.png" alt="logo" style="height: 60px;">
 </header>
-
-
 
 <button onclick="window.location.href='index.html'" style="margin-bottom: 20px; padding: 8px 16px; background-color: white; border: 2px solid red; color: black; border-radius: 5px; cursor: pointer;">
   ⬅ Back to Form
 </button>
 
-	
 <table id="emgTable" style="background-color: white">
   <thead>
     <tr>
@@ -38,7 +32,6 @@
       <th>Contact Number</th>
       <th>Institution</th>
       <th>Reading</th>
-      
     </tr>
   </thead>
   <tbody></tbody>
@@ -51,10 +44,11 @@
     async function fetchData() {
       const res = await fetch(API_URL);
       const data = await res.json();
+      // ✅ Sort by "Reading" in decreasing order
       return data.sort((a, b) => {
-        const emgA = parseFloat(a.EMG) || 0;
-        const emgB = parseFloat(b.EMG) || 0;
-        return emgB - emgA;
+        const readA = parseFloat(a.Reading) || 0;
+        const readB = parseFloat(b.Reading) || 0;
+        return readB - readA;
       });
     }
 
@@ -66,24 +60,18 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${index + 1}</td>
-          <td>${row.Name}</td>
-          <td>${row.ContactNo}</td>
-          <td>${row.Institution}</td>
-          <td>${row.Reading}</td>
-          
+          <td>${row.Name || ""}</td>
+          <td>${row.ContactNo || ""}</td>
+          <td>${row.Institution || ""}</td>
+          <td>${row.Reading || ""}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-   
-
-   
-
     async function init() {
       const data = await fetchData();
       renderTable(data);
-      populateFilter(data);
     }
 
     init();
